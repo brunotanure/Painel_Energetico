@@ -75,7 +75,7 @@ if uploaded_file:
                  labels={'value': 'Potência (W)'})
     st.plotly_chart(fig_sim, use_container_width=True)
 
-    st.subheader("Carga diária estimada por categoria")
+    st.subheader("Carga diária estimada por categoria (kWh)")
     data_carga = pd.DataFrame({
         'Categoria': ['Refrigeração', 'Cozinha', 'Iluminação/Conforto'],
         'Consumo (kWh)': [(qtd_geladeiras_tipo1*400*24*fator_ciclo+qtd_geladeiras_tipo2*130*24*fator_ciclo+qtd_freezer*220*24*fator_ciclo)/1000, (potencia_fritadeira*horas_fritadeira + 700*hr_estufa_quente + 100*hr_microondas)/1000, (qtd_lâmpadas*20*8 + qtd_ventiladores*100*15 + qtd_tvs*150*10 + qtd_estufa_fria*400*24)/1000]
@@ -83,7 +83,7 @@ if uploaded_file:
     fig1 = px.pie(data_carga, values='Consumo (kWh)', names='Categoria', hole=0.4, color= 'Categoria')
     st.plotly_chart(fig1, use_container_width=True)
 
-    st.subheader("histórico das faturas por composição")
+    st.subheader("histórico das faturas por composição (R$)")
     fig2 = px.bar(df_grouped.melt(id_vars='Data da Fatura', value_vars=['Valor energia', 'Valor ICMS', 'Valor PIS', 'Valor COFINS', 'Valor CIP/COSIP', 'Valor Bandeira']), 
                   x='Data da Fatura', y='value', color='variable', labels={'value': 'valor (R$)'})
     st.plotly_chart(fig2, use_container_width=True)
