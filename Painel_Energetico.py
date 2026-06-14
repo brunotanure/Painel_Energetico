@@ -83,7 +83,7 @@ if uploaded_file:
     fig1 = px.pie(data_carga, values='Consumo (kWh)', names='Categoria', hole=0.4, color= 'Categoria')
     st.plotly_chart(fig1, use_container_width=True)
 
-    st.subheader("histórico das faturas por origem (R$)")
+    st.subheader("histórico das faturas por composição")
     fig2 = px.bar(df_grouped.melt(id_vars='Data da Fatura', value_vars=['Valor energia', 'Valor ICMS', 'Valor PIS', 'Valor COFINS', 'Valor CIP/COSIP', 'Valor Bandeira']), 
                   x='Data da Fatura', y='value', color='variable', labels={'value': 'valor (R$)'})
     st.plotly_chart(fig2, use_container_width=True)
