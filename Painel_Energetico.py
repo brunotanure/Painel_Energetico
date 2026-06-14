@@ -33,17 +33,19 @@ if uploaded_file:
     
     # Cálculo Consumo Simulado (kWh/mês)
 
-    qtd_lâmpadas = 15 # 15 Lâmpadas (15W cada) 8h de uso cada
+    qtd_lâmpadas = 15 # 15 Lâmpadas (20W cada) 8h de uso cada
     qtd_estufa_fria = 1 # 1 Estufa Fria (400W) 24h ligado
-    hr_estufa_quente = 12 # 1 estufa quente (1500W) 12h de uso
-    qtd_geladeiras = 5 # 5 Geladeiras (300W cada)
+    hr_estufa_quente = 12 # 1 estufa quente (700W) 12h de uso
+    qtd_geladeiras_tipo1 = 3 # 3 Geladeiras expositoras (400W cada)
+    qtd_geladeiras_tipo2 = 1 # 1 Geladeira vertical (130W)
+    qtd_freezer =  1 # 1 freezer horizontal (220W)
     hr_fritadeira = 4 # 1 Fritadeira (3.000W): 4 horas de uso
     hr_microondas = 2 # 1 Micro-ondas (1.200W): Estimado em 100W médios/hora, uso de 2 horas
     qtd_ventiladores = 4 # 4 Ventiladores (100W cada) 15h de uso cada
     qtd_tvs = 2 # 2 TVs (150W cada): 10 horas de uso cada
 
 
-    consumo_diario = ((qtd_lâmpadas*15*8) + (qtd_geladeiras*300*24*fator_ciclo) + (qtd_ventiladores*100*15) + (qtd_estufa_fria*400*24) + (1500*hr_estufa_quente) + (potencia_fritadeira*horas_fritadeira) + (100*hr_microondas) + (qtd_tvs*150*10)) / 1000
+    consumo_diario = ((qtd_lâmpadas*20*8) + (qtd_geladeiras_tipo1*400*24*fator_ciclo+qtd_geladeiras_tipo2*130*24*fator_ciclo+qtd_freezer*220*24*fator_ciclo) + (qtd_ventiladores*100*15) + (qtd_estufa_fria*400*24) + (700*hr_estufa_quente) + (potencia_fritadeira*horas_fritadeira) + (100*hr_microondas) + (qtd_tvs*150*10)) / 1000
     consumo_mensal = consumo_diario * dias_faturados
     fatura_simulada = consumo_mensal * (0.85 + adicional) * 1.3 # Estimativa com impostos
     
@@ -76,7 +78,7 @@ if uploaded_file:
     st.subheader("Carga diária estimada por categoria")
     data_carga = pd.DataFrame({
         'Categoria': ['Refrigeração', 'Cozinha', 'Iluminação/Conforto'],
-        'Consumo (kWh)': [(5*300*24*fator_ciclo)/1000, (potencia_fritadeira*horas_fritadeira + 1500*hr_estufa_quente + 100*hr_microondas)/1000, (qtd_lâmpadas*15*8 + qtd_ventiladores*100*15 + qtd_tvs*150*10 + qtd_estufa_fria*400*24)/1000]
+        'Consumo (kWh)': [(qtd_geladeiras_tipo1*400*24*fator_ciclo+qtd_geladeiras_tipo2*130*24*fator_ciclo+qtd_freezer*220*24*fator_ciclo)/1000, (potencia_fritadeira*horas_fritadeira + 700*hr_estufa_quente + 100*hr_microondas)/1000, (qtd_lâmpadas*20*8 + qtd_ventiladores*100*15 + qtd_tvs*150*10 + qtd_estufa_fria*400*24)/1000]
     })
     fig1 = px.pie(data_carga, values='Consumo (kWh)', names='Categoria', hole=0.4, color= 'Categoria')
     st.plotly_chart(fig1, use_container_width=True)
