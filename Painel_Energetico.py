@@ -15,7 +15,7 @@ if uploaded_file:
     df = pd.read_excel(uploaded_file)
     cols = ['Valor Total Faturado', 'Valor ICMS', 'Valor PIS', 'Valor COFINS', 'Valor CIP/COSIP', 'Valor kwh medido', 'Valor Bandeira']
     df_grouped = df.groupby('Data da Fatura')[cols].sum().reset_index()
-    df_grouped['Valor Líquido'] = df_grouped['Valor Total Faturado'] - (df_grouped['Valor ICMS'] + df_grouped['Valor PIS'] + df_grouped['Valor COFINS'] + df_grouped['Valor CIP/COSIP'] + df_grouped['Valor Bandeira'])
+    df_grouped['Valor energia'] = df_grouped['Valor Total Faturado'] - (df_grouped['Valor ICMS'] + df_grouped['Valor PIS'] + df_grouped['Valor COFINS'] + df_grouped['Valor CIP/COSIP'] + df_grouped['Valor Bandeira'])
     
     media_historica = df_grouped['Valor Total Faturado'].mean()
     
@@ -83,9 +83,9 @@ if uploaded_file:
     fig1 = px.pie(data_carga, values='Consumo (kWh)', names='Categoria', hole=0.4, color= 'Categoria')
     st.plotly_chart(fig1, use_container_width=True)
 
-    st.subheader("Composição da Fatura (histórico real)")
-    fig2 = px.bar(df_grouped.melt(id_vars='Data da Fatura', value_vars=['Valor Líquido', 'Valor ICMS', 'Valor PIS', 'Valor COFINS', 'Valor CIP/COSIP', 'Valor Bandeira']), 
-                  x='Data da Fatura', y='value', color='variable')
+    st.subheader("histórico das faturas por origem (R$)")
+    fig2 = px.bar(df_grouped.melt(id_vars='Data da Fatura', value_vars=['Valor energia', 'Valor ICMS', 'Valor PIS', 'Valor COFINS', 'Valor CIP/COSIP', 'Valor Bandeira']), 
+                  x='Data da Fatura', y='value', color='variable', labels={'value': 'valor (R$)'})
     st.plotly_chart(fig2, use_container_width=True)
 
 else:
